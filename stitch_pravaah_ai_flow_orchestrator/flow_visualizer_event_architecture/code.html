@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah - Event Flow Visualizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#002e6a",
+                    "surface-container": "#1c1f2a",
+                    "surface-container-high": "#262a35",
+                    "tertiary-container": "#009eb9",
+                    "primary-container": "#4d8eff",
+                    "tertiary-fixed": "#acedff",
+                    "primary": "#adc6ff",
+                    "inverse-on-surface": "#2c303b",
+                    "surface-tint": "#adc6ff",
+                    "on-tertiary-container": "#002f38",
+                    "inverse-primary": "#005ac2",
+                    "on-error": "#690005",
+                    "surface-bright": "#353944",
+                    "on-secondary-fixed": "#2c0051",
+                    "on-secondary-fixed-variant": "#6900b3",
+                    "on-tertiary-fixed-variant": "#004e5c",
+                    "secondary-fixed-dim": "#ddb7ff",
+                    "surface-variant": "#313540",
+                    "on-tertiary-fixed": "#001f26",
+                    "secondary-fixed": "#f0dbff",
+                    "surface-container-low": "#171b26",
+                    "surface-container-lowest": "#0a0e18",
+                    "outline-variant": "#424754",
+                    "primary-fixed-dim": "#adc6ff",
+                    "surface": "#0f131d",
+                    "tertiary": "#4cd7f6",
+                    "on-background": "#dfe2f1",
+                    "primary-fixed": "#d8e2ff",
+                    "outline": "#8c909f",
+                    "on-tertiary": "#003640",
+                    "on-primary-container": "#00285d",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#dfe2f1",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-secondary-container": "#d6a9ff",
+                    "surface-container-highest": "#313540",
+                    "surface-dim": "#0f131d",
+                    "tertiary-fixed-dim": "#4cd7f6",
+                    "secondary": "#ddb7ff",
+                    "error-container": "#93000a",
+                    "secondary-container": "#6f00be",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-secondary": "#490080",
+                    "background": "#0f131d",
+                    "inverse-surface": "#dfe2f1",
+                    "on-primary-fixed": "#001a42"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "xl": "64px",
+                    "md": "24px",
+                    "lg": "40px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "margin_mobile": "16px",
+                    "margin_desktop": "32px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "label-caps": ["JetBrains Mono"],
+                    "code-md": ["JetBrains Mono"],
+                    "display": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "code-md": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}]
+            },
+            "animation": {
+                "pulse-flow": "pulse-flow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                "marquee": "marquee 20s linear infinite"
+            },
+            "keyframes": {
+                "pulse-flow": {
+                    "0%, 100%": { opacity: 1 },
+                    "50%": { opacity: .5 }
+                },
+                "marquee": {
+                    "0%": { transform: "translateX(100%)" },
+                    "100%": { transform: "translateX(-100%)" }
+                }
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .grid-bg {
+            background-size: 24px 24px;
+            background-image: radial-gradient(circle, theme('colors.outline-variant') 1px, transparent 1px);
+        }
+        .node-glow-cyan {
+            box-shadow: 0 0 15px theme('colors.tertiary-container');
+        }
+        .node-glow-purple {
+            box-shadow: 0 0 15px theme('colors.secondary-container');
+        }
+        .flow-line {
+            stroke-dasharray: 4;
+            animation: dash 2s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -8; }
+        }
+        
+        /* SideNavBar Layout */
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            height: 100vh;
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 240px; /* Account for fixed sidebar */
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                margin-bottom: 64px; /* Account for bottom nav */
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex bg-surface/80 backdrop-blur-md font-headline-md text-headline-md font-body-md text-body-md fixed left-0 top-0 h-full w-60 border-r border-outline-variant/30 shadow-xl flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display text-headline-md font-bold text-primary">Pravaah</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">AI-Native Backend</p>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary-container text-on-primary-container rounded-lg py-2 px-4 flex items-center justify-center gap-2 hover:bg-primary transition-colors duration-200">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="font-body-md text-body-md font-medium">New Workflow</span>
+</button>
+</div>
+<ul class="flex-1 flex flex-col gap-2">
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a></li>
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">extension</span> Plugins</a></li>
+<li><a class="flex items-center gap-3 py-2 text-primary font-bold border-l-2 border-primary pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full bg-surface-container" href="#"><span class="material-symbols-outlined">bolt</span> Events</a></li>
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">psychology</span> AI Workflows</a></li>
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">api</span> APIs</a></li>
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">terminal</span> Logs</a></li>
+</ul>
+<ul class="mt-auto flex flex-col gap-2">
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">settings</span> Settings</a></li>
+<li><a class="flex items-center gap-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 rounded-r-full" href="#"><span class="material-symbols-outlined">help</span> Support</a></li>
+</ul>
+</nav>
+<div class="main-content">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md font-headline-md text-headline-md font-body-md text-body-md border-b border-outline-variant/30 flex justify-between items-center w-full px-margin_desktop h-16 sticky top-0 z-40">
+<div class="flex items-center gap-6">
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Dev Environment</a>
+<a class="text-primary font-bold hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Project Context</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container border border-outline-variant rounded-full py-1 pl-9 pr-4 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-48 transition-all" placeholder="Search..." type="text"/>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors border border-outline-variant rounded-full px-3 py-1 text-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> System Health
+                </button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</header>
+<!-- Main Canvas Area -->
+<main class="flex-1 relative overflow-hidden flex flex-col lg:flex-row bg-surface-container-lowest grid-bg">
+<!-- Visualizer Canvas -->
+<div class="flex-1 relative overflow-auto p-8 min-h-[500px]">
+<!-- Graph Header -->
+<div class="absolute top-6 left-6 z-10 bg-surface-container/80 backdrop-blur-sm border border-outline-variant rounded-lg p-4 max-w-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Event Flow Visualizer</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-3">Live data journey for incoming events.</p>
+<div class="flex gap-2">
+<span class="bg-surface-bright border border-outline-variant rounded px-2 py-1 text-xs font-code-md text-tertiary flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Live Stream</span>
+<span class="bg-surface-bright border border-outline-variant rounded px-2 py-1 text-xs font-code-md text-on-surface-variant">4 Active Paths</span>
+</div>
+</div>
+<!-- Node Canvas SVG (Background Lines) -->
+<svg class="absolute top-0 left-0 w-full h-full pointer-events-none" style="min-width: 800px;">
+<!-- Customer to Dispatcher -->
+<path d="M 250 150 C 350 150, 300 250, 400 250" fill="none" stroke="theme('colors.outline-variant')" stroke-width="2"></path>
+<path class="flow-line opacity-50" d="M 250 150 C 350 150, 300 250, 400 250" fill="none" stroke="theme('colors.tertiary')" stroke-width="2"></path>
+<!-- Dispatcher to Hook -->
+<path d="M 600 250 L 700 250" fill="none" stroke="theme('colors.outline-variant')" stroke-width="2"></path>
+<path class="flow-line opacity-50" d="M 600 250 L 700 250" fill="none" stroke="theme('colors.primary')" stroke-width="2"></path>
+<!-- Dispatcher to AI -->
+<path d="M 500 300 C 500 400, 600 400, 700 400" fill="none" stroke="theme('colors.outline-variant')" stroke-width="2"></path>
+<!-- Hook to DB -->
+<path d="M 900 250 C 950 250, 950 350, 1000 350" fill="none" stroke="theme('colors.outline-variant')" stroke-width="2"></path>
+<!-- AI to DB -->
+<path d="M 900 400 C 950 400, 950 350, 1000 350" fill="none" stroke="theme('colors.outline-variant')" stroke-width="2"></path>
+<path class="flow-line opacity-70" d="M 900 400 C 950 400, 950 350, 1000 350" fill="none" stroke="theme('colors.secondary')" stroke-width="2"></path>
+</svg>
+<!-- Nodes -->
+<div class="relative w-full h-full" style="min-width: 1000px;">
+<!-- Node 1: Customer Created -->
+<div class="absolute top-[100px] left-[50px] bg-surface-container border border-outline-variant rounded-lg p-4 w-48 shadow-lg cursor-pointer hover:border-tertiary transition-colors node-glow-cyan">
+<div class="flex items-center gap-2 mb-2 border-b border-outline-variant/50 pb-2">
+<span class="material-symbols-outlined text-tertiary text-lg">person_add</span>
+<span class="font-label-caps text-label-caps text-tertiary">Input Node</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Customer Created</h3>
+<p class="font-code-md text-code-md text-on-surface-variant text-xs mt-1 truncate">evt_cust_9a8b7c</p>
+</div>
+<!-- Node 2: Dispatcher -->
+<div class="absolute top-[200px] left-[400px] bg-surface-container border border-outline-variant rounded-lg p-4 w-48 shadow-lg cursor-pointer hover:border-primary transition-colors">
+<div class="flex items-center gap-2 mb-2 border-b border-outline-variant/50 pb-2">
+<span class="material-symbols-outlined text-primary text-lg">call_split</span>
+<span class="font-label-caps text-label-caps text-primary">Processing Node</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Dispatcher</h3>
+<p class="font-code-md text-code-md text-on-surface-variant text-xs mt-1">Routing logic</p>
+</div>
+<!-- Node 3: on_create:Customer -->
+<div class="absolute top-[200px] left-[700px] bg-surface-container border border-primary rounded-lg p-4 w-48 shadow-lg cursor-pointer ring-1 ring-primary/50">
+<div class="flex items-center gap-2 mb-2 border-b border-outline-variant/50 pb-2">
+<span class="material-symbols-outlined text-primary text-lg">webhook</span>
+<span class="font-label-caps text-label-caps text-primary">Hook Node</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">on_create:Customer</h3>
+<p class="font-code-md text-code-md text-on-surface-variant text-xs mt-1">Webhook trig.</p>
+</div>
+<!-- Node 4: AI Summary Service -->
+<div class="absolute top-[350px] left-[700px] bg-surface-container border border-secondary rounded-lg p-4 w-48 shadow-lg cursor-pointer node-glow-purple">
+<div class="flex items-center gap-2 mb-2 border-b border-outline-variant/50 pb-2">
+<span class="material-symbols-outlined text-secondary text-lg">auto_awesome</span>
+<span class="font-label-caps text-label-caps text-secondary">AI Node</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">AI Summary Service</h3>
+<p class="font-code-md text-code-md text-on-surface-variant text-xs mt-1 truncate">gpt-4-turbo processing</p>
+</div>
+<!-- Node 5: Database -->
+<div class="absolute top-[300px] left-[1000px] bg-surface-container border border-outline-variant rounded-lg p-4 w-48 shadow-lg cursor-pointer hover:border-on-surface-variant transition-colors">
+<div class="flex items-center gap-2 mb-2 border-b border-outline-variant/50 pb-2">
+<span class="material-symbols-outlined text-outline text-lg">database</span>
+<span class="font-label-caps text-label-caps text-outline">Persistence Node</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Database: sqlite_main</h3>
+<p class="font-code-md text-code-md text-on-surface-variant text-xs mt-1">Write operation</p>
+</div>
+</div>
+</div>
+<!-- Context Sidebar (Inspector) -->
+<aside class="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-outline-variant/30 bg-surface/90 backdrop-blur-md flex flex-col h-full z-20">
+<div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface text-base">Node Inspector</h3>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="p-4 flex-1 overflow-y-auto">
+<div class="mb-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-sm">webhook</span>
+<h4 class="font-body-md font-semibold text-on-surface">on_create:Customer</h4>
+</div>
+<p class="font-code-md text-xs text-on-surface-variant">ID: hook_4492a</p>
+</div>
+<div class="mb-6">
+<h5 class="font-label-caps text-label-caps text-on-surface-variant mb-2">Execution Metrics</h5>
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-surface-container border border-outline-variant/50 rounded p-2">
+<p class="text-xs text-on-surface-variant">Latency</p>
+<p class="font-code-md text-tertiary">42ms</p>
+</div>
+<div class="bg-surface-container border border-outline-variant/50 rounded p-2">
+<p class="text-xs text-on-surface-variant">Status</p>
+<p class="font-code-md text-primary">200 OK</p>
+</div>
+</div>
+</div>
+<div>
+<h5 class="font-label-caps text-label-caps text-on-surface-variant mb-2">Raw Payload</h5>
+<div class="bg-[#0B0F19] border border-outline-variant/50 rounded-lg p-3 font-code-md text-xs overflow-x-auto">
+<pre><code class="text-on-surface-variant">{
+  <span class="text-primary">"event_id"</span>: <span class="text-tertiary">"evt_cust_9a8b7c"</span>,
+  <span class="text-primary">"type"</span>: <span class="text-tertiary">"customer.created"</span>,
+  <span class="text-primary">"timestamp"</span>: <span class="text-secondary">1715428900</span>,
+  <span class="text-primary">"data"</span>: {
+    <span class="text-primary">"customer_id"</span>: <span class="text-tertiary">"cus_12345"</span>,
+    <span class="text-primary">"email"</span>: <span class="text-tertiary">"dev@pravaah.io"</span>,
+    <span class="text-primary">"plan"</span>: <span class="text-tertiary">"pro"</span>
+  },
+  <span class="text-primary">"metadata"</span>: {
+    <span class="text-primary">"source"</span>: <span class="text-tertiary">"api_v2"</span>,
+    <span class="text-primary">"processed"</span>: <span class="text-secondary">true</span>
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant/30 flex gap-2">
+<button class="flex-1 bg-surface-container border border-outline-variant text-on-surface py-1.5 rounded text-sm hover:bg-surface-bright transition-colors">Replay Event</button>
+<button class="flex-1 bg-surface-container border border-outline-variant text-on-surface py-1.5 rounded text-sm hover:bg-surface-bright transition-colors">View Logs</button>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest/90 backdrop-blur-md font-code-md text-code-md fixed bottom-0 right-0 w-[calc(100%-240px)] border-t border-outline-variant/30 flex justify-between items-center px-gutter py-xs h-10 z-30 hidden md:flex cursor-default">
+<div class="font-label-caps text-label-caps text-on-surface">Pravaah Framework © 2024</div>
+<div class="flex gap-4">
+<span class="text-tertiary hover:text-tertiary-fixed transition-colors">Active Plugins: 12</span>
+<span class="text-on-surface-variant">Throughput: 1.2k req/s</span>
+<span class="text-on-surface-variant">AI Tokens: 4.5k</span>
+</div>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: pravaah_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config
+      - pravaah_data:/app/data
+    environment:
+      - PRAVAAH_DATABASE_URL=sqlite+aiosqlite:////app/data/pravaah.db
+      - PRAVAAH_DEBUG=False
+      # - OPENAI_API_KEY=your_key_here
+    restart: unless-stopped
+
+volumes:
+  pravaah_data:

@@ -1,0 +1,26 @@
+# Pravaah Framework Configuration
+# Override any value via environment variables with PRAVAAH_ prefix
+# Example: PRAVAAH_APP__DEBUG=true
+
+app:
+  name: Pravaah
+  version: "0.1.0"
+  debug: true
+  host: "0.0.0.0"
+  port: 8000
+
+database:
+  provider: sqlite
+  url: "sqlite+aiosqlite:///./pravaah.db"
+  echo: false
+
+ai:
+  enabled: true
+  provider: mock  # Use "openai" in production with a real api_key
+  api_key: ""
+  model: "gpt-4o-mini"
+
+plugins:
+  plugin_dirs:
+    - "pravaah/plugins"
+  auto_discover: true

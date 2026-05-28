@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah - AI Workflow Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#002e6a",
+                        "surface-container": "#1c1f2a",
+                        "surface-container-high": "#262a35",
+                        "tertiary-container": "#009eb9",
+                        "primary-container": "#4d8eff",
+                        "tertiary-fixed": "#acedff",
+                        "primary": "#adc6ff",
+                        "inverse-on-surface": "#2c303b",
+                        "surface-tint": "#adc6ff",
+                        "on-tertiary-container": "#002f38",
+                        "inverse-primary": "#005ac2",
+                        "on-error": "#690005",
+                        "surface-bright": "#353944",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-tertiary-fixed-variant": "#004e5c",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-variant": "#313540",
+                        "on-tertiary-fixed": "#001f26",
+                        "secondary-fixed": "#f0dbff",
+                        "surface-container-low": "#171b26",
+                        "surface-container-lowest": "#0a0e18",
+                        "outline-variant": "#424754",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface": "#0f131d",
+                        "tertiary": "#4cd7f6",
+                        "on-background": "#dfe2f1",
+                        "primary-fixed": "#d8e2ff",
+                        "outline": "#8c909f",
+                        "on-tertiary": "#003640",
+                        "on-primary-container": "#00285d",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#dfe2f1",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-secondary-container": "#d6a9ff",
+                        "surface-container-highest": "#313540",
+                        "surface-dim": "#0f131d",
+                        "tertiary-fixed-dim": "#4cd7f6",
+                        "secondary": "#ddb7ff",
+                        "error-container": "#93000a",
+                        "secondary-container": "#6f00be",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-secondary": "#490080",
+                        "background": "#0f131d",
+                        "inverse-surface": "#dfe2f1",
+                        "on-primary-fixed": "#001a42"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.125rem",
+                        lg: "0.25rem",
+                        xl: "0.5rem",
+                        full: "0.75rem"
+                    },
+                    spacing: {
+                        sm: "12px",
+                        gutter: "16px",
+                        xl: "64px",
+                        md: "24px",
+                        lg: "40px",
+                        base: "8px",
+                        xs: "4px",
+                        margin_mobile: "16px",
+                        margin_desktop: "32px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                        "code-md": ["JetBrains Mono"],
+                        "display": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    fontSize: {
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "code-md": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+                        "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.04em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .grid-bg {
+            background-size: 24px 24px;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+        .card-outline {
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+        }
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(111, 0, 190, 0.3);
+        }
+        /* Syntax Highlighting */
+        .sh-keyword { color: #ddb7ff; } /* secondary */
+        .sh-string { color: #4cd7f6; } /* tertiary */
+        .sh-comment { color: #8c909f; } /* outline */
+        .sh-variable { color: #adc6ff; } /* primary */
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden font-body-md grid-bg">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col h-screen py-6 bg-surface/80 backdrop-blur-md fixed left-0 top-0 h-full w-60 border-r border-outline-variant/30 shadow-xl z-50">
+<div class="px-6 mb-8 flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary text-3xl">psychology</span>
+<div>
+<h1 class="font-display text-headline-md font-bold text-primary tracking-tight">Pravaah</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">AI-Native Backend</p>
+</div>
+</div>
+<div class="px-6 mb-6">
+<button class="w-full bg-primary text-on-primary font-headline-md text-body-md py-2 px-4 rounded hover:bg-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Workflow</span>
+</button>
+</div>
+<ul class="flex-1 space-y-2">
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span><span>Dashboard</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">extension</span><span>Plugins</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bolt</span><span>Events</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-primary font-bold border-l-2 border-primary pl-4 hover:bg-surface-container-high transition-colors duration-200 bg-surface-container-low" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span><span>AI Workflows</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">api</span><span>APIs</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">terminal</span><span>Logs</span></a></li>
+</ul>
+<div class="mt-auto px-0">
+<ul class="space-y-2">
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span><span>Settings</span></a></li>
+<li><a class="flex items-center space-x-3 py-2 text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span><span>Support</span></a></li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 md:ml-60 flex flex-col min-h-screen relative pb-16 md:pb-10">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin_desktop h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 z-40">
+<div class="flex items-center space-x-6">
+<span class="md:hidden font-display text-headline-md font-bold text-primary">Pravaah</span>
+<nav class="hidden md:flex space-x-6">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Dev Environment</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Project Context</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="hidden lg:flex items-center bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/50">
+<span class="material-symbols-outlined text-outline text-sm mr-2">search</span>
+<input class="bg-transparent border-none text-body-md text-on-surface focus:ring-0 w-48 placeholder-outline p-0 h-auto" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-primary font-body-md text-body-md hover:text-primary-fixed transition-colors flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">monitor_heart</span>
+                    System Health
+                </button>
+<div class="flex space-x-3 border-l border-outline-variant/30 pl-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined opacity-80 hover:opacity-100">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined opacity-80 hover:opacity-100">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-margin_mobile md:p-margin_desktop pt-8 space-y-8 max-w-7xl mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Customer Summary Workflow</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-2xl">Transforms raw customer interaction transcripts into structured JSON summaries using LLMs.</p>
+</div>
+<div class="flex space-x-3">
+<button class="px-4 py-2 rounded bg-surface-container border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors font-body-md text-body-md flex items-center">
+<span class="material-symbols-outlined text-sm mr-2">history</span> Versions
+                    </button>
+<button class="px-4 py-2 rounded bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-body-md text-body-md flex items-center glow-purple">
+<span class="material-symbols-outlined text-sm mr-2">play_arrow</span> Test Flow
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Prompt Template Editor (Spans 2 columns) -->
+<div class="lg:col-span-2 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col overflow-hidden shadow-lg card-outline">
+<div class="px-4 py-3 border-b border-outline-variant/30 bg-surface/50 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary text-sm">code</span>
+<span class="font-label-caps text-label-caps text-on-surface">system_prompt.jinja2</span>
+</div>
+<div class="flex space-x-2">
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm">content_copy</span></button>
+</div>
+</div>
+<div class="p-4 bg-[#0a0e18] flex-1 overflow-x-auto">
+<pre class="font-code-md text-code-md leading-relaxed text-on-surface"><span class="sh-comment"># Context setup for the LLM</span>
+<span class="sh-keyword">You are an expert</span> customer success analyst.
+Analyze the following transcript and extract key insights.
+
+<span class="sh-comment"># Template Variables</span>
+<span class="sh-keyword">Transcript Data:</span>
+<span class="sh-variable">{{ customer_transcript }}</span>
+
+<span class="sh-keyword">Output Format Requirements:</span>
+Please provide the response in strict JSON format matching this schema:
+<span class="sh-string">{
+  "sentiment": "positive|neutral|negative",
+  "key_issues": ["issue1", "issue2"],
+  "churn_risk_score": 0.0 to 1.0,
+  "summary": "Concise 2 sentence summary"
+}</span>
+
+<span class="sh-keyword">{% if</span> previous_interactions <span class="sh-keyword">%}</span>
+<span class="sh-comment"># Historical Context</span>
+Consider these past interactions:
+<span class="sh-variable">{{ previous_interactions }}</span>
+<span class="sh-keyword">{% endif %}</span>
+</pre>
+</div>
+</div>
+<!-- Provider Configuration -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col p-5 card-outline relative overflow-hidden">
+<!-- Neural decorative background -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center">
+<span class="material-symbols-outlined text-secondary mr-2">tune</span>
+                        Model Config
+                    </h3>
+<div class="space-y-4">
+<!-- Provider Toggle -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Primary Provider</label>
+<div class="grid grid-cols-2 gap-2 p-1 bg-surface-container rounded-lg border border-outline-variant/30">
+<button class="py-1.5 rounded bg-secondary-container text-on-secondary-container font-body-md text-body-md text-center border border-secondary/30 shadow-sm">OpenAI</button>
+<button class="py-1.5 rounded bg-transparent text-on-surface-variant hover:text-on-surface font-body-md text-body-md text-center transition-colors">Anthropic</button>
+</div>
+</div>
+<!-- Model Select -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Model</label>
+<select class="w-full bg-surface-container border border-outline-variant/50 rounded px-3 py-2 text-on-surface font-body-md text-body-md focus:ring-1 focus:ring-secondary focus:border-secondary">
+<option>gpt-4-turbo-preview</option>
+<option>gpt-4</option>
+<option>gpt-3.5-turbo</option>
+</select>
+</div>
+<!-- Parameters -->
+<div class="space-y-4 pt-4 border-t border-outline-variant/30">
+<div>
+<div class="flex justify-between mb-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Temperature</label>
+<span class="font-code-md text-code-md text-on-surface">0.2</span>
+</div>
+<div class="h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-1/5 rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Max Tokens</label>
+<span class="font-code-md text-code-md text-on-surface">1024</span>
+</div>
+<div class="h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-1/4 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Neural Flow Visualizer (Full width below) -->
+<div class="lg:col-span-3 rounded-xl bg-surface-container-lowest border border-outline-variant/30 p-6 card-outline flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(221, 183, 255, 0.1) 50px);"></div>
+<div class="flex items-center w-full max-w-4xl justify-between relative z-10">
+<!-- Input Node -->
+<div class="bg-surface-container border border-outline-variant/50 rounded-lg p-3 text-center w-32 shadow-lg">
+<span class="material-symbols-outlined text-outline mb-1 text-2xl">database</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant">Raw Data</div>
+</div>
+<!-- Flow Line 1 -->
+<div class="flex-1 h-px bg-gradient-to-r from-outline-variant/50 via-secondary to-secondary relative">
+<div class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-secondary glow-purple animate-pulse"></div>
+</div>
+<!-- Central AI Facade Node -->
+<div class="bg-surface border border-secondary rounded-xl p-4 text-center w-48 shadow-lg glow-purple relative">
+<div class="absolute -inset-1 bg-gradient-to-r from-secondary-container to-tertiary-container rounded-xl blur opacity-20"></div>
+<span class="material-symbols-outlined text-secondary mb-2 text-3xl">psychology</span>
+<div class="font-headline-md text-body-md font-bold text-on-surface mb-1">AI Facade</div>
+<div class="font-code-md text-code-md text-secondary">Processing...</div>
+</div>
+<!-- Flow Line 2 -->
+<div class="flex-1 h-px bg-gradient-to-r from-secondary via-tertiary to-outline-variant/50 relative">
+<div class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-tertiary shadow-[0_0_10px_rgba(76,215,246,0.5)] animate-pulse" style="animation-delay: 500ms;"></div>
+</div>
+<!-- Output Node -->
+<div class="bg-surface-container border border-outline-variant/50 rounded-lg p-3 text-center w-32 shadow-lg">
+<span class="material-symbols-outlined text-tertiary mb-1 text-2xl">data_object</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant">Struct JSON</div>
+</div>
+</div>
+</div>
+<!-- Execution History Table -->
+<div class="lg:col-span-3 rounded-xl bg-surface-container-lowest border border-outline-variant/30 overflow-hidden card-outline">
+<div class="px-5 py-4 border-b border-outline-variant/30 flex justify-between items-center bg-surface/30">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Executions</h3>
+<button class="text-on-surface-variant hover:text-primary text-sm flex items-center">
+                            View All <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-container/50">
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">Status</th>
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">ID</th>
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">Model</th>
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">Latency</th>
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">Tokens</th>
+<th class="px-5 py-3 font-label-caps text-label-caps text-on-surface-variant font-semibold">Time</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors">
+<td class="px-5 py-3"><span class="flex items-center text-tertiary"><span class="material-symbols-outlined text-sm mr-1">check_circle</span> 200 OK</span></td>
+<td class="px-5 py-3 font-code-md text-code-md text-on-surface-variant">req_8f92a1</td>
+<td class="px-5 py-3 text-on-surface">gpt-4-turbo</td>
+<td class="px-5 py-3 text-on-surface">1.2s</td>
+<td class="px-5 py-3 text-on-surface">450</td>
+<td class="px-5 py-3 text-on-surface-variant text-sm">Just now</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors">
+<td class="px-5 py-3"><span class="flex items-center text-tertiary"><span class="material-symbols-outlined text-sm mr-1">check_circle</span> 200 OK</span></td>
+<td class="px-5 py-3 font-code-md text-code-md text-on-surface-variant">req_3b4c99</td>
+<td class="px-5 py-3 text-on-surface">gpt-4-turbo</td>
+<td class="px-5 py-3 text-on-surface">0.9s</td>
+<td class="px-5 py-3 text-on-surface">320</td>
+<td class="px-5 py-3 text-on-surface-variant text-sm">2m ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-5 py-3"><span class="flex items-center text-error"><span class="material-symbols-outlined text-sm mr-1">error</span> 429 Limit</span></td>
+<td class="px-5 py-3 font-code-md text-code-md text-on-surface-variant">req_1a7d55</td>
+<td class="px-5 py-3 text-on-surface">gpt-4-turbo</td>
+<td class="px-5 py-3 text-on-surface">0.1s</td>
+<td class="px-5 py-3 text-on-surface">-</td>
+<td class="px-5 py-3 text-on-surface-variant text-sm">15m ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="fixed bottom-0 right-0 w-full md:w-[calc(100%-240px)] bg-surface-container-lowest/90 backdrop-blur-md border-t border-outline-variant/30 flex justify-between items-center px-gutter py-xs h-10 z-30">
+<div class="font-label-caps text-label-caps text-on-surface">Pravaah Framework © 2024</div>
+<div class="flex space-x-4">
+<span class="font-code-md text-code-md text-on-surface-variant cursor-default hover:text-tertiary-fixed">Active Plugins: 12</span>
+<span class="font-code-md text-code-md text-on-surface-variant cursor-default hover:text-tertiary-fixed">Throughput: 1.2k req/s</span>
+<span class="font-code-md text-code-md text-tertiary cursor-default hover:text-tertiary-fixed">AI Tokens: 4.5k</span>
+</div>
+</footer>
+</div>
+</body></html>

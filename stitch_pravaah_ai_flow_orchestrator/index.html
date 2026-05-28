@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah — Flow-driven AI-native backend framework</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "on-primary": "#002e6a",
+                    "surface-container": "#1c1f2a",
+                    "surface-container-high": "#262a35",
+                    "tertiary-container": "#009eb9",
+                    "primary-container": "#4d8eff",
+                    "tertiary-fixed": "#acedff",
+                    "primary": "#adc6ff",
+                    "inverse-on-surface": "#2c303b",
+                    "surface-tint": "#adc6ff",
+                    "on-tertiary-container": "#002f38",
+                    "inverse-primary": "#005ac2",
+                    "on-error": "#690005",
+                    "surface-bright": "#353944",
+                    "on-secondary-fixed": "#2c0051",
+                    "on-secondary-fixed-variant": "#6900b3",
+                    "on-tertiary-fixed-variant": "#004e5c",
+                    "secondary-fixed-dim": "#ddb7ff",
+                    "surface-variant": "#313540",
+                    "on-tertiary-fixed": "#001f26",
+                    "secondary-fixed": "#f0dbff",
+                    "surface-container-low": "#171b26",
+                    "surface-container-lowest": "#0a0e18",
+                    "outline-variant": "#424754",
+                    "primary-fixed-dim": "#adc6ff",
+                    "surface": "#0f131d",
+                    "tertiary": "#4cd7f6",
+                    "on-background": "#dfe2f1",
+                    "primary-fixed": "#d8e2ff",
+                    "outline": "#8c909f",
+                    "on-tertiary": "#003640",
+                    "on-primary-container": "#00285d",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#dfe2f1",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-secondary-container": "#d6a9ff",
+                    "surface-container-highest": "#313540",
+                    "surface-dim": "#0f131d",
+                    "tertiary-fixed-dim": "#4cd7f6",
+                    "secondary": "#ddb7ff",
+                    "error-container": "#93000a",
+                    "secondary-container": "#6f00be",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-secondary": "#490080",
+                    "background": "#0f131d",
+                    "inverse-surface": "#dfe2f1",
+                    "on-primary-fixed": "#001a42"
+                },
+                borderRadius: {
+                    DEFAULT: "0.125rem",
+                    lg: "0.25rem",
+                    xl: "0.5rem",
+                    full: "0.75rem"
+                },
+                spacing: {
+                    sm: "12px",
+                    gutter: "16px",
+                    xl: "64px",
+                    md: "24px",
+                    lg: "40px",
+                    base: "8px",
+                    xs: "4px",
+                    margin_mobile: "16px",
+                    margin_desktop: "32px"
+                },
+                fontFamily: {
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "label-caps": ["JetBrains Mono"],
+                    "code-md": ["JetBrains Mono"],
+                    display: ["Geist"],
+                    "body-lg": ["Geist"],
+                    "body-md": ["Geist"]
+                },
+                fontSize: {
+                    "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                    "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                    "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                    "code-md": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+                    display: ["48px", { lineHeight: "56px", letterSpacing: "-0.04em", fontWeight: "700" }],
+                    "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                    "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }]
+                },
+                animation: {
+                    "float": "float 6s ease-in-out infinite",
+                    "float-delay": "float 6s ease-in-out 2s infinite",
+                    "float-slow": "float 8s ease-in-out 1s infinite",
+                    "glow-pulse": "glowPulse 3s ease-in-out infinite",
+                    "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+                    "fade-in-up-delay": "fadeInUp 0.8s ease-out 0.15s forwards",
+                    "fade-in-up-delay-2": "fadeInUp 0.8s ease-out 0.3s forwards",
+                    "scale-in": "scaleIn 0.6s ease-out forwards",
+                },
+                keyframes: {
+                    float: {
+                        "0%, 100%": { transform: "translateY(0px)" },
+                        "50%": { transform: "translateY(-20px)" },
+                    },
+                    glowPulse: {
+                        "0%, 100%": { boxShadow: "0 0 15px rgba(77, 142, 255, 0.4), 0 0 30px rgba(77, 142, 255, 0.2)" },
+                        "50%": { boxShadow: "0 0 25px rgba(77, 142, 255, 0.6), 0 0 50px rgba(77, 142, 255, 0.3)" },
+                    },
+                    fadeInUp: {
+                        "0%": { opacity: "0", transform: "translateY(30px)" },
+                        "100%": { opacity: "1", transform: "translateY(0)" },
+                    },
+                    scaleIn: {
+                        "0%": { opacity: "0", transform: "scale(0.9)" },
+                        "100%": { opacity: "1", transform: "scale(1)" },
+                    },
+                },
+            },
+        },
+    };
+</script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #0B0F19; color: #dfe2f1; font-family: 'Geist', sans-serif; }
+
+    /* Glass Panel */
+    .glass-panel {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .glass-panel-hover {
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-panel-hover:hover {
+        background: rgba(38, 42, 53, 0.8);
+        border: 1px solid rgba(173, 198, 255, 0.2);
+        box-shadow: 0 0 20px rgba(77, 142, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Glow Text */
+    .glow-text {
+        text-shadow: 0 0 20px rgba(173, 198, 255, 0.5), 0 0 60px rgba(173, 198, 255, 0.2), 0 0 100px rgba(77, 142, 255, 0.1);
+    }
+    .glow-text-secondary {
+        text-shadow: 0 0 15px rgba(221, 183, 255, 0.4), 0 0 40px rgba(221, 183, 255, 0.15);
+    }
+
+    /* Dot Grid Background */
+    .grid-bg {
+        background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+
+    /* Flow Lines Background */
+    .flow-container {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow: hidden;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .flow-line {
+        position: absolute;
+        height: 1px;
+        opacity: 0;
+        animation: flowAnim linear infinite;
+    }
+    .flow-line::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: inherit;
+        filter: blur(1px);
+    }
+    @keyframes flowAnim {
+        0% { transform: translateX(-220px); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateX(calc(100vw + 100px)); opacity: 0; }
+    }
+
+    /* Particle System */
+    .particle-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Pulse Animation for System Health */
+    .pulse-ring { animation: pulseAnim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulseAnim {
+        0% { box-shadow: 0 0 0 0 rgba(76, 215, 246, 0.7); }
+        70% { box-shadow: 0 0 0 8px rgba(76, 215, 246, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(76, 215, 246, 0); }
+    }
+
+    /* Glow Button */
+    .glow-btn {
+        position: relative;
+        overflow: hidden;
+        animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(77, 142, 255, 0.4), 0 0 30px rgba(77, 142, 255, 0.15); }
+        50% { box-shadow: 0 0 25px rgba(77, 142, 255, 0.6), 0 0 50px rgba(77, 142, 255, 0.25); }
+    }
+    .glow-btn::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(173, 198, 255, 0.15), transparent);
+        animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Stream Indicator Blink */
+    .stream-dot {
+        animation: streamBlink 2s ease-in-out infinite;
+    }
+    .stream-dot-delay {
+        animation: streamBlink 2s ease-in-out 0.5s infinite;
+    }
+    @keyframes streamBlink {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Stagger fade-in */
+    .stagger-item { opacity: 0; }
+
+    /* Hero radial mask */
+    .hero-radial-mask {
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 70%);
+    }
+
+    /* Code block scrollbar */
+    pre::-webkit-scrollbar { height: 4px; }
+    pre::-webkit-scrollbar-track { background: transparent; }
+    pre::-webkit-scrollbar-thumb { background: #424754; border-radius: 2px; }
+
+    /* Nav link underline effect */
+    .nav-link { position: relative; }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px; left: 0;
+        width: 0%; height: 1px;
+        background: #adc6ff;
+        transition: width 0.3s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after {
+        width: 100%;
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Feature card icon float */
+    .card-icon {
+        transition: transform 0.4s ease, color 0.3s ease;
+    }
+    .glass-panel-hover:hover .card-icon {
+        transform: translateY(-4px) scale(1.1);
+    }
+
+    /* Notification badge */
+    .notif-badge {
+        position: absolute;
+        top: -2px; right: -2px;
+        width: 8px; height: 8px;
+        background: #ffb4ab;
+        border-radius: 50%;
+        border: 1.5px solid #0B0F19;
+        animation: notifPulse 3s ease-in-out infinite;
+    }
+    @keyframes notifPulse {
+        0%, 80%, 100% { opacity: 1; }
+        40% { opacity: 0.4; }
+    }
+
+    /* Footer stat hover */
+    .footer-stat {
+        transition: color 0.2s ease;
+        cursor: default;
+    }
+    .footer-stat:hover {
+        color: #acedff;
+    }
+</style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+
+<!-- ═══════════════════ PARTICLE CANVAS ═══════════════════ -->
+<canvas class="particle-canvas" id="particleCanvas"></canvas>
+
+<!-- ═══════════════════ FLOW LINES BACKGROUND ═══════════════════ -->
+<div class="flow-container" id="flowBg"></div>
+
+<!-- ═══════════════════ TOP NAVIGATION BAR ═══════════════════ -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex justify-between items-center px-margin_mobile md:px-margin_desktop h-16 transition-all duration-300" id="topNav">
+    <div class="flex items-center gap-md">
+        <!-- Pravaah Logo/Brand -->
+        <a href="index.html" class="flex items-center gap-xs group">
+            <span class="material-symbols-outlined text-primary-container text-[28px] group-hover:text-primary transition-colors">water_drop</span>
+            <span class="font-display text-headline-md font-bold text-primary tracking-tight glow-text">Pravaah</span>
+        </a>
+        <!-- Nav Links -->
+        <div class="hidden md:flex gap-gutter ml-lg">
+            <a class="nav-link active font-body-md text-body-md text-primary font-semibold hover:text-primary transition-colors" href="#">Dev Environment</a>
+            <a class="nav-link font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Project Context</a>
+        </div>
+    </div>
+    <div class="flex items-center gap-gutter">
+        <!-- System Health -->
+        <button class="font-label-caps text-label-caps text-tertiary glass-panel px-sm py-xs rounded flex items-center gap-xs hover:bg-surface-container-high transition-all duration-300 group" id="healthBtn">
+            <span class="pulse-ring w-2 h-2 rounded-full bg-tertiary inline-block"></span>
+            <span class="hidden sm:inline">System Health</span>
+        </button>
+        <!-- Notification -->
+        <div class="flex items-center gap-sm">
+            <button class="relative p-1 hover:bg-surface-container-high rounded transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-[22px] opacity-80 hover:opacity-100">notifications</span>
+                <span class="notif-badge"></span>
+            </button>
+            <!-- Account -->
+            <button class="p-1 hover:bg-surface-container-high rounded transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-[22px] opacity-80 hover:opacity-100">account_circle</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+<main class="flex-grow pt-24 px-margin_mobile md:px-margin_desktop pb-24 z-10 relative">
+
+    <!-- ──────────── HERO SECTION ──────────── -->
+    <section class="max-w-5xl mx-auto mt-xl mb-32 text-center flex flex-col items-center justify-center min-h-[60vh] relative" id="hero">
+        <!-- Dot grid behind hero -->
+        <div class="absolute inset-0 grid-bg opacity-20 hero-radial-mask"></div>
+
+        <!-- Radial glow behind title -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary-container/8 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[300px] h-[200px] bg-secondary-container/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+        <!-- Title -->
+        <h1 class="font-display text-[64px] md:text-[80px] leading-[1.05] tracking-[-0.04em] font-bold text-on-surface mb-4 glow-text animate-fade-in-up relative z-10">
+            Pravaah
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="font-headline-lg text-headline-lg text-on-surface-variant mb-10 max-w-2xl animate-fade-in-up opacity-0" style="animation-delay: 0.15s; animation-fill-mode: forwards;">
+            Flow-driven AI-native backend framework.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up opacity-0" style="animation-delay: 0.3s; animation-fill-mode: forwards;">
+            <!-- Launch Demo -->
+            <a href="dashboard.html" class="glow-btn bg-primary-container text-on-primary-container font-semibold text-[16px] px-7 py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-colors duration-300 flex items-center gap-2 relative z-10">
+                <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+                Launch Demo
+            </a>
+            <!-- View Architecture -->
+            <a href="events.html" class="glass-panel glass-panel-hover text-on-surface font-semibold text-[16px] px-7 py-3 rounded-lg flex items-center gap-2 transition-all duration-300">
+                View Architecture
+                <span class="material-symbols-outlined text-[18px] text-primary">arrow_forward</span>
+            </a>
+            <!-- Explore Plugins -->
+            <a href="plugins.html" class="glass-panel glass-panel-hover text-on-surface font-semibold text-[16px] px-7 py-3 rounded-lg flex items-center gap-2 transition-all duration-300">
+                <span class="material-symbols-outlined text-[18px] text-secondary">extension</span>
+                Explore Plugins
+            </a>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40 animate-float">
+            <span class="font-label-caps text-label-caps text-on-surface-variant tracking-widest">SCROLL</span>
+            <span class="material-symbols-outlined text-on-surface-variant text-[18px]">keyboard_arrow_down</span>
+        </div>
+    </section>
+
+    <!-- ──────────── FEATURES BENTO GRID ──────────── -->
+    <section class="max-w-6xl mx-auto mb-32" id="features">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter auto-rows-[260px]">
+
+            <!-- ▓▓ CARD 1: Modular by Design (1 col) ▓▓ -->
+            <div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-primary-container relative overflow-hidden group feature-card">
+                <!-- Ambient glow -->
+                <div class="absolute -right-10 -top-10 w-44 h-44 bg-primary-container/8 rounded-full blur-3xl group-hover:bg-primary-container/20 transition-all duration-500"></div>
+                <div>
+                    <span class="material-symbols-outlined text-primary text-[32px] mb-3 block card-icon">extension</span>
+                    <h3 class="font-headline-md text-headline-md text-on-surface mb-1">Modular by Design</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Hot-swappable components that scale independently. Build complex systems with atomic precision.</p>
+                </div>
+                <!-- Code snippet -->
+                <div class="font-code-md text-code-md text-primary/90 mt-3 bg-surface-container-lowest/50 rounded px-3 py-2 border border-outline-variant/20">
+                    <span class="text-tertiary">import</span> { Module } <span class="text-tertiary">from</span> <span class="text-secondary">'@pravaah/core'</span>
+                </div>
+            </div>
+
+            <!-- ▓▓ CARD 2: Event-Driven Core (2 cols) ▓▓ -->
+            <div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-tertiary md:col-span-2 relative overflow-hidden group feature-card">
+                <!-- Grid pattern overlay -->
+                <div class="absolute inset-0 grid-bg opacity-15"></div>
+                <!-- Ambient glow -->
+                <div class="absolute -left-10 -bottom-10 w-56 h-56 bg-tertiary/5 rounded-full blur-3xl group-hover:bg-tertiary/15 transition-all duration-500"></div>
+                <div class="relative z-10">
+                    <span class="material-symbols-outlined text-tertiary text-[32px] mb-3 block card-icon">bolt</span>
+                    <h3 class="font-headline-md text-headline-md text-on-surface mb-1">Event-Driven Core</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant max-w-lg leading-relaxed">Asynchronous, non-blocking architecture ensuring sub-millisecond latency for high-throughput environments.</p>
+                </div>
+                <!-- Stream Status Indicators -->
+                <div class="relative z-10 flex flex-wrap gap-3 mt-auto">
+                    <div class="bg-surface-container/80 rounded px-3 py-1.5 font-code-md text-code-md text-on-surface border border-outline-variant/30 flex items-center gap-2 hover:border-tertiary/30 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-tertiary stream-dot"></span> Stream A active
+                    </div>
+                    <div class="bg-surface-container/80 rounded px-3 py-1.5 font-code-md text-code-md text-on-surface border border-outline-variant/30 flex items-center gap-2 hover:border-secondary/30 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-secondary stream-dot-delay"></span> Stream B active
+                    </div>
+                    <div class="bg-surface-container/80 rounded px-3 py-1.5 font-code-md text-code-md text-on-surface border border-outline-variant/30 flex items-center gap-2 hover:border-primary/30 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-primary stream-dot"></span> Stream C idle
+                    </div>
+                </div>
+            </div>
+
+            <!-- ▓▓ CARD 3: AI-Native Processing (3 cols — full width) ▓▓ -->
+            <div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-secondary-container md:col-span-3 relative overflow-hidden group feature-card min-h-[260px]">
+                <!-- Purple gradient overlay -->
+                <div class="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-secondary-container/8 to-transparent pointer-events-none group-hover:from-secondary-container/15 transition-all duration-500"></div>
+
+                <div class="flex flex-col md:flex-row gap-6 items-stretch relative z-10 h-full">
+                    <!-- Text side -->
+                    <div class="flex-1 flex flex-col justify-center">
+                        <span class="material-symbols-outlined text-secondary text-[32px] mb-3 block card-icon">psychology</span>
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2">AI-Native Processing</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant max-w-xl leading-relaxed">Deep integration with LLMs and embedding models. Built-in vector search and inference pipelines routed seamlessly through the core event bus.</p>
+                    </div>
+                    <!-- Code block side -->
+                    <div class="flex-1 flex items-stretch">
+                        <div class="w-full bg-surface-container-lowest/80 rounded-lg border border-outline-variant/40 p-4 font-code-md text-code-md text-on-surface-variant overflow-x-auto flex items-center group-hover:border-secondary-container/40 transition-colors">
+<pre><code><span class="text-secondary">const</span> pipeline = <span class="text-tertiary">new</span> <span class="text-primary">AIPipeline</span>({
+  model: <span class="text-primary">'gpt-4-turbo'</span>,
+  temperature: <span class="text-secondary">0.2</span>,
+  stream: <span class="text-tertiary">true</span>,
+  maxTokens: <span class="text-secondary">4096</span>
+});
+
+pipeline.<span class="text-tertiary">on</span>(<span class="text-primary">'data'</span>, <span class="text-secondary">async</span> chunk =&gt; {
+  <span class="text-tertiary">await</span> processFlow(chunk);
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- ═══════════════════ FIXED BOTTOM FOOTER BAR ═══════════════════ -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant/30 flex justify-between items-center px-margin_mobile md:px-margin_desktop py-xs h-10 z-50">
+    <span class="font-label-caps text-label-caps text-on-surface-variant">Pravaah Framework © 2025</span>
+    <div class="flex gap-4 md:gap-md font-code-md text-code-md text-on-surface-variant">
+        <span class="footer-stat flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-tertiary inline-block"></span>
+            Active Plugins: <span class="text-on-surface" id="pluginCount">12</span>
+        </span>
+        <span class="footer-stat hidden sm:flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span>
+            Throughput: <span class="text-on-surface" id="throughput">1.2k</span> req/s
+        </span>
+        <span class="footer-stat hidden md:flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block"></span>
+            AI Tokens: <span class="text-on-surface" id="tokenCount">4.5k</span>
+        </span>
+    </div>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script>
+// ── Flow Lines Generator ──
+(function initFlowLines() {
+    const container = document.getElementById('flowBg');
+    const lineCount = 25;
+    const colors = [
+        'linear-gradient(90deg, transparent, rgba(77, 142, 255, 0.6), rgba(77, 142, 255, 0.15), transparent)',
+        'linear-gradient(90deg, transparent, rgba(76, 215, 246, 0.5), rgba(76, 215, 246, 0.1), transparent)',
+        'linear-gradient(90deg, transparent, rgba(221, 183, 255, 0.4), rgba(221, 183, 255, 0.1), transparent)',
+    ];
+
+    for (let i = 0; i < lineCount; i++) {
+        const line = document.createElement('div');
+        line.className = 'flow-line';
+        const width = Math.random() * 250 + 100;
+        line.style.width = `${width}px`;
+        line.style.top = `${Math.random() * 100}%`;
+        line.style.background = colors[Math.floor(Math.random() * colors.length)];
+        line.style.animationDuration = `${Math.random() * 6 + 4}s`;
+        line.style.animationDelay = `${Math.random() * 8}s`;
+        container.appendChild(line);
+    }
+})();
+
+// ── Particle System ──
+(function initParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animId;
+    let mouseX = -1000, mouseY = -1000;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.baseRadius = Math.random() * 1.5 + 0.5;
+            this.radius = this.baseRadius;
+            this.vx = (Math.random() - 0.5) * 0.3;
+            this.vy = (Math.random() - 0.5) * 0.3;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.baseAlpha = this.alpha;
+            this.pulseSpeed = Math.random() * 0.02 + 0.005;
+            this.pulseOffset = Math.random() * Math.PI * 2;
+            this.color = this.pickColor();
+        }
+        pickColor() {
+            const colors = [
+                [173, 198, 255],  // primary
+                [76, 215, 246],   // tertiary
+                [221, 183, 255],  // secondary
+                [255, 255, 255],  // white
+            ];
+            const weights = [0.35, 0.25, 0.2, 0.2];
+            let r = Math.random(), cumulative = 0;
+            for (let i = 0; i < weights.length; i++) {
+                cumulative += weights[i];
+                if (r <= cumulative) return colors[i];
+            }
+            return colors[0];
+        }
+        update(time) {
+            this.x += this.vx;
+            this.y += this.vy;
+            // Pulse
+            const pulse = Math.sin(time * this.pulseSpeed + this.pulseOffset);
+            this.radius = this.baseRadius + pulse * 0.4;
+            this.alpha = this.baseAlpha + pulse * 0.15;
+            // Mouse interaction
+            const dx = this.x - mouseX;
+            const dy = this.y - mouseY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+                const force = (150 - dist) / 150;
+                this.alpha = Math.min(this.baseAlpha + force * 0.5, 1);
+                this.radius = this.baseRadius + force * 2;
+            }
+            // Wrap around
+            if (this.x < -10) this.x = canvas.width + 10;
+            if (this.x > canvas.width + 10) this.x = -10;
+            if (this.y < -10) this.y = canvas.height + 10;
+            if (this.y > canvas.height + 10) this.y = -10;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, Math.max(this.radius, 0.2), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${Math.max(this.alpha, 0)})`;
+            ctx.fill();
+        }
+    }
+
+    // Create particles
+    const count = Math.min(Math.floor((canvas.width * canvas.height) / 12000), 120);
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate(time) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update(time);
+            p.draw();
+        });
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    const lineAlpha = (1 - dist / 100) * 0.08;
+                    ctx.strokeStyle = `rgba(173, 198, 255, ${lineAlpha})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        animId = requestAnimationFrame(animate);
+    }
+    animate(0);
+})();
+
+// ── Scroll-triggered Feature Card Animations ──
+(function initScrollAnimations() {
+    const cards = document.querySelectorAll('.feature-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '0';
+                entry.target.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    entry.target.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 120);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    cards.forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        observer.observe(card);
+    });
+})();
+
+// ── Navbar scroll effect ──
+(function initNavScroll() {
+    const nav = document.getElementById('topNav');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > 80) {
+            nav.style.background = 'rgba(15, 19, 29, 0.95)';
+            nav.style.borderBottomColor = 'rgba(66, 71, 84, 0.5)';
+        } else {
+            nav.style.background = 'rgba(15, 19, 29, 0.8)';
+            nav.style.borderBottomColor = 'rgba(66, 71, 84, 0.3)';
+        }
+        lastScroll = scrollY;
+    });
+})();
+
+// ── Footer live stats simulation ──
+(function initFooterStats() {
+    const throughputEl = document.getElementById('throughput');
+    const tokenEl = document.getElementById('tokenCount');
+    const pluginEl = document.getElementById('pluginCount');
+
+    setInterval(() => {
+        const tVal = (1.0 + Math.random() * 0.5).toFixed(1);
+        throughputEl.textContent = tVal + 'k';
+    }, 3000);
+
+    setInterval(() => {
+        const aVal = (3.5 + Math.random() * 3).toFixed(1);
+        tokenEl.textContent = aVal + 'k';
+    }, 4500);
+})();
+
+// ── System Health button tooltip ──
+(function initHealthBtn() {
+    const btn = document.getElementById('healthBtn');
+    btn.addEventListener('click', () => {
+        const statuses = ['All systems nominal', 'Latency: 2ms avg', 'Uptime: 99.99%', 'Event bus: healthy'];
+        const msg = statuses[Math.floor(Math.random() * statuses.length)];
+        btn.setAttribute('title', msg);
+        // Brief flash
+        btn.style.boxShadow = '0 0 15px rgba(76, 215, 246, 0.4)';
+        setTimeout(() => { btn.style.boxShadow = ''; }, 600);
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah - AI Workflows</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "on-primary": "#002e6a",
+                    "surface-container": "#1c1f2a",
+                    "surface-container-high": "#262a35",
+                    "tertiary-container": "#009eb9",
+                    "primary-container": "#4d8eff",
+                    "tertiary-fixed": "#acedff",
+                    "primary": "#adc6ff",
+                    "inverse-on-surface": "#2c303b",
+                    "surface-tint": "#adc6ff",
+                    "on-tertiary-container": "#002f38",
+                    "inverse-primary": "#005ac2",
+                    "on-error": "#690005",
+                    "surface-bright": "#353944",
+                    "on-secondary-fixed": "#2c0051",
+                    "on-secondary-fixed-variant": "#6900b3",
+                    "on-tertiary-fixed-variant": "#004e5c",
+                    "secondary-fixed-dim": "#ddb7ff",
+                    "surface-variant": "#313540",
+                    "on-tertiary-fixed": "#001f26",
+                    "secondary-fixed": "#f0dbff",
+                    "surface-container-low": "#171b26",
+                    "surface-container-lowest": "#0a0e18",
+                    "outline-variant": "#424754",
+                    "primary-fixed-dim": "#adc6ff",
+                    "surface": "#0f131d",
+                    "tertiary": "#4cd7f6",
+                    "on-background": "#dfe2f1",
+                    "primary-fixed": "#d8e2ff",
+                    "outline": "#8c909f",
+                    "on-tertiary": "#003640",
+                    "on-primary-container": "#00285d",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#dfe2f1",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-secondary-container": "#d6a9ff",
+                    "surface-container-highest": "#313540",
+                    "surface-dim": "#0f131d",
+                    "tertiary-fixed-dim": "#4cd7f6",
+                    "secondary": "#ddb7ff",
+                    "error-container": "#93000a",
+                    "secondary-container": "#6f00be",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-secondary": "#490080",
+                    "background": "#0f131d",
+                    "inverse-surface": "#dfe2f1",
+                    "on-primary-fixed": "#001a42"
+                },
+                borderRadius: {
+                    DEFAULT: "0.125rem",
+                    lg: "0.25rem",
+                    xl: "0.5rem",
+                    full: "0.75rem"
+                },
+                spacing: {
+                    sm: "12px",
+                    gutter: "16px",
+                    xl: "64px",
+                    md: "24px",
+                    lg: "40px",
+                    base: "8px",
+                    xs: "4px",
+                    margin_mobile: "16px",
+                    margin_desktop: "32px"
+                },
+                fontFamily: {
+                    "headline-md": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "label-caps": ["JetBrains Mono"],
+                    "code-md": ["JetBrains Mono"],
+                    "display": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "body-md": ["Geist"]
+                },
+                fontSize: {
+                    "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                    "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                    "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                    "code-md": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+                    "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.04em", fontWeight: "700" }],
+                    "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                    "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    body {
+        background-color: #0f131d;
+        color: #dfe2f1;
+        background-image:
+            radial-gradient(circle at 50% 0%, rgba(111, 0, 190, 0.06) 0%, transparent 70%),
+            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 100% 100%, 24px 24px, 24px 24px;
+    }
+
+    .glass-card {
+        background: linear-gradient(135deg, rgba(28, 31, 42, 0.8) 0%, rgba(10, 14, 24, 0.9) 100%);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(66, 71, 84, 0.3);
+        border-radius: 12px;
+    }
+
+    .glass-card-subtle {
+        background: linear-gradient(135deg, rgba(28, 31, 42, 0.6) 0%, rgba(10, 14, 24, 0.7) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(66, 71, 84, 0.2);
+    }
+
+    .glow-active {
+        box-shadow: 0 0 15px rgba(173, 198, 255, 0.15);
+    }
+
+    .glow-purple {
+        box-shadow: 0 0 20px rgba(111, 0, 190, 0.3), 0 0 40px rgba(111, 0, 190, 0.1);
+    }
+
+    .glow-green {
+        box-shadow: 0 0 15px rgba(76, 215, 246, 0.2);
+    }
+
+    @keyframes pulse-ring {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .status-pulse::after {
+        content: '';
+        position: absolute;
+        left: -4px; top: -4px; right: -4px; bottom: -4px;
+        border-radius: 50%;
+        border: 2px solid #4cd7f6;
+        animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    @keyframes flow-dot {
+        0% { left: 0%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { left: 100%; opacity: 0; }
+    }
+
+    .flow-line-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ddb7ff;
+        box-shadow: 0 0 8px rgba(221, 183, 255, 0.6);
+        animation: flow-dot 2s ease-in-out infinite;
+    }
+
+    .flow-line-animated-2::after {
+        animation-delay: 0.6s;
+        background: #4cd7f6;
+        box-shadow: 0 0 8px rgba(76, 215, 246, 0.6);
+    }
+
+    /* Custom range slider styling */
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: #1c1f2a;
+        outline: none;
+        cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ddb7ff;
+        border: 2px solid #6f00be;
+        box-shadow: 0 0 10px rgba(111, 0, 190, 0.4);
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 0 16px rgba(111, 0, 190, 0.6);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ddb7ff;
+        border: 2px solid #6f00be;
+        box-shadow: 0 0 10px rgba(111, 0, 190, 0.4);
+        cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 3px;
+    }
+
+    /* Syntax highlighting */
+    .syn-comment { color: #8c909f; }
+    .syn-template-var { color: #4cd7f6; }
+    .syn-string { color: #adc6ff; }
+    .syn-jinja-tag { color: #ddb7ff; }
+    .syn-keyword { color: #adc6ff; font-weight: 600; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(66, 71, 84, 0.5); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(66, 71, 84, 0.8); }
+
+    /* Copy button tooltip */
+    .copy-btn-tooltip {
+        position: relative;
+    }
+    .copy-btn-tooltip::after {
+        content: 'Copied!';
+        position: absolute;
+        top: -28px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        background: #262a35;
+        color: #4cd7f6;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: all 0.2s ease;
+        pointer-events: none;
+    }
+    .copy-btn-tooltip.show-tooltip::after {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+
+    /* Node pulse animation */
+    @keyframes node-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(111, 0, 190, 0.3); }
+        50% { box-shadow: 0 0 30px rgba(111, 0, 190, 0.5), 0 0 60px rgba(111, 0, 190, 0.15); }
+    }
+    .node-active-pulse {
+        animation: node-pulse 3s ease-in-out infinite;
+    }
+
+    /* Provider toggle active fill */
+    .provider-active {
+        background: linear-gradient(135deg, #6f00be 0%, #490080 100%);
+        box-shadow: 0 0 12px rgba(111, 0, 190, 0.3);
+    }
+</style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex">
+
+<!-- SideNavBar -->
+<nav class="bg-surface/80 backdrop-blur-md fixed left-0 top-0 h-full w-60 border-r border-outline-variant/30 shadow-xl flex flex-col py-6 z-50">
+    <!-- Header -->
+    <div class="px-md mb-lg">
+        <div class="flex items-center gap-sm mb-xs">
+            <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">terminal</span>
+            </div>
+            <h1 class="font-display text-headline-md font-bold text-primary tracking-tight">Pravaah</h1>
+        </div>
+        <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest pl-[44px]">AI-Native Backend</p>
+    </div>
+    <!-- CTA -->
+    <div class="px-md mb-md">
+        <button class="w-full bg-primary hover:bg-primary-fixed transition-colors duration-200 text-on-primary font-body-md font-semibold py-sm rounded-lg flex items-center justify-center gap-xs scale-95 active:scale-90 shadow-[0_0_15px_rgba(173,198,255,0.2)]">
+            <span class="material-symbols-outlined">add</span>
+            New Workflow
+        </button>
+    </div>
+    <!-- Main Nav -->
+    <div class="flex-1 overflow-y-auto">
+        <ul class="space-y-xs px-base">
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="dashboard.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="plugins.html">
+                    <span class="material-symbols-outlined">extension</span>
+                    Plugins
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="events.html">
+                    <span class="material-symbols-outlined">bolt</span>
+                    Events
+                </a>
+            </li>
+            <!-- Active Item: AI Workflows -->
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-primary font-bold border-l-2 border-primary pl-4 hover:bg-surface-container-high transition-colors duration-200 bg-surface-container-low/50" href="ai-workflows.html">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                    AI Workflows
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="index.html">
+                    <span class="material-symbols-outlined">api</span>
+                    APIs
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-sm py-sm rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="index.html">
+                    <span class="material-symbols-outlined">terminal</span>
+                    Logs
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- Footer Nav -->
+    <div class="px-base mt-auto pt-sm border-t border-outline-variant/30 mx-base">
+        <ul class="space-y-xs">
+            <li>
+                <a class="flex items-center gap-sm py-xs rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-sm py-xs rounded-md text-on-surface-variant font-medium pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+                    <span class="material-symbols-outlined">help</span>
+                    Support
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md fixed top-0 border-b border-outline-variant/30 flex justify-between items-center px-margin_desktop h-16 ml-60 z-40 w-[calc(100%-240px)]">
+    <!-- Navigation Links -->
+    <div class="flex gap-md items-center">
+        <a class="text-primary font-bold text-body-md opacity-80 hover:opacity-100 hover:text-primary transition-colors" href="#">Dev Environment</a>
+        <span class="text-outline-variant">/</span>
+        <a class="text-on-surface-variant text-body-md opacity-80 hover:opacity-100 hover:text-primary transition-colors" href="#">Project Context</a>
+    </div>
+    <!-- Trailing Actions -->
+    <div class="flex items-center gap-md">
+        <!-- Search -->
+        <div class="relative group">
+            <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+            <input class="bg-surface-container border border-outline-variant/50 rounded-full py-xs pl-lg pr-sm text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all font-code-md placeholder:text-on-surface-variant/50" placeholder="Search resources..." type="text"/>
+        </div>
+        <button class="flex items-center gap-xs px-sm py-xs rounded-md border border-outline-variant/50 text-body-md text-on-surface hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-[18px] text-tertiary">monitor_heart</span>
+            System Health
+        </button>
+        <div class="flex gap-xs border-l border-outline-variant/30 pl-md ml-xs">
+            <button class="w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 relative">
+                <span class="material-symbols-outlined text-[20px]">notifications</span>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+            </button>
+            <button class="w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100">
+                <span class="material-symbols-outlined text-[20px]">account_circle</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content Area -->
+<main class="ml-60 pt-24 px-margin_desktop pb-24 w-full min-h-screen">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-lg">
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Customer Summary Workflow</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Transforms raw customer interaction transcripts into structured JSON summaries using LLMs.</p>
+        </div>
+        <div class="flex gap-sm shrink-0">
+            <button class="px-4 py-2 rounded-lg bg-surface-container/60 border border-outline-variant/50 text-on-surface hover:bg-surface-container-high hover:border-outline-variant transition-all duration-200 font-body-md text-body-md flex items-center gap-xs backdrop-blur-sm">
+                <span class="material-symbols-outlined text-[18px]">history</span>
+                Versions
+            </button>
+            <button class="px-4 py-2 rounded-lg bg-tertiary-container text-on-tertiary-container hover:brightness-110 transition-all duration-200 font-body-md text-body-md font-semibold flex items-center gap-xs glow-green">
+                <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                Test Flow
+            </button>
+        </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-12 gap-gutter mb-gutter">
+
+        <!-- LEFT COLUMN: Prompt Template Editor (~60%) -->
+        <div class="col-span-12 lg:col-span-7 glass-card overflow-hidden flex flex-col">
+            <!-- Editor Header -->
+            <div class="px-md py-sm border-b border-outline-variant/20 bg-surface-container/30 flex justify-between items-center">
+                <div class="flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-secondary text-[16px]">code</span>
+                    <span class="font-code-md text-code-md text-on-surface font-semibold">&lt;&gt; system_prompt.jinja2</span>
+                </div>
+                <button id="copyBtn" class="copy-btn-tooltip w-7 h-7 rounded hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="copyCode()">
+                    <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                </button>
+            </div>
+            <!-- Code Block -->
+            <div class="flex-1 bg-[#0a0e18] p-md overflow-x-auto" style="background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 16px 16px;">
+                <pre class="font-code-md text-code-md leading-relaxed" id="codeBlock"><span class="syn-comment"># Context setup for the LLM</span>
+<span class="syn-keyword">You are an expert</span> customer success analyst.
+Analyze the following transcript and extract key insights.
+
+<span class="syn-comment"># Template Variables</span>
+<span class="syn-keyword">Transcript Data:</span>
+<span class="syn-template-var">{{ customer_transcript }}</span>
+
+<span class="syn-keyword">Output Format Requirements:</span>
+Please provide the response in strict JSON format matching this schema:
+<span class="syn-string">{
+    "sentiment": "positive|neutral|negative",
+    "key_issues": ["issue1", "issue2"],
+    "churn_risk_score": 0.0 to 1.0,
+    "summary": "Concise 2 sentence summary"
+}</span>
+
+<span class="syn-jinja-tag">{% if</span> previous_interactions <span class="syn-jinja-tag">%}</span>
+<span class="syn-comment"># Historical Context</span>
+Consider these past interactions:
+<span class="syn-template-var">{{ previous_interactions }}</span>
+<span class="syn-jinja-tag">{% endif %}</span></pre>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Model Config (~40%) -->
+        <div class="col-span-12 lg:col-span-5 glass-card p-md flex flex-col relative overflow-hidden">
+            <!-- Decorative glow -->
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Title -->
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-md flex items-center relative z-10">
+                <span class="material-symbols-outlined text-secondary mr-2">tune</span>
+                Model Config
+            </h3>
+
+            <div class="space-y-md relative z-10">
+                <!-- Primary Provider -->
+                <div class="space-y-2">
+                    <label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Primary Provider</label>
+                    <div class="grid grid-cols-2 gap-2 p-1 bg-surface-container rounded-lg border border-outline-variant/30">
+                        <button id="providerOpenAI" class="py-2 rounded-md provider-active text-on-secondary-container font-body-md text-body-md text-center transition-all duration-200 font-semibold" onclick="setProvider('openai')">
+                            OpenAI
+                        </button>
+                        <button id="providerAnthropic" class="py-2 rounded-md bg-transparent text-on-surface-variant hover:text-on-surface font-body-md text-body-md text-center transition-all duration-200 border border-transparent hover:border-outline-variant/30" onclick="setProvider('anthropic')">
+                            Anthropic
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Model Dropdown -->
+                <div class="space-y-2">
+                    <label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Model</label>
+                    <div class="relative">
+                        <select id="modelSelect" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2.5 text-on-surface font-code-md text-code-md focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary appearance-none cursor-pointer hover:border-outline-variant transition-colors">
+                            <option>gpt-4-turbo-preview</option>
+                            <option>gpt-4</option>
+                            <option>gpt-3.5-turbo</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-outline-variant/30"></div>
+
+                <!-- Temperature Slider -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Temperature</label>
+                        <span id="tempValue" class="font-code-md text-code-md text-on-surface bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30">0.2</span>
+                    </div>
+                    <div class="relative pt-1">
+                        <input type="range" id="tempSlider" min="0" max="100" value="20" class="w-full" oninput="updateTemp(this.value)" />
+                        <div class="flex justify-between mt-1">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant/50 text-[9px]">Precise</span>
+                            <span class="font-label-caps text-label-caps text-on-surface-variant/50 text-[9px]">Creative</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Max Tokens Slider -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Max Tokens</label>
+                        <span id="tokensValue" class="font-code-md text-code-md text-on-surface bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30">1024</span>
+                    </div>
+                    <div class="relative pt-1">
+                        <input type="range" id="tokensSlider" min="0" max="4096" value="1024" step="64" class="w-full" oninput="updateTokens(this.value)" />
+                        <div class="flex justify-between mt-1">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant/50 text-[9px]">128</span>
+                            <span class="font-label-caps text-label-caps text-on-surface-variant/50 text-[9px]">4096</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pipeline Visualizer -->
+    <div class="glass-card p-md mb-gutter relative overflow-hidden">
+        <!-- Background pattern -->
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(221, 183, 255, 0.08) 50px);"></div>
+
+        <div class="flex items-center justify-center py-lg relative z-10">
+            <div class="flex items-center w-full max-w-3xl justify-between">
+
+                <!-- Node 1: Raw Data -->
+                <div class="bg-surface-container border border-outline-variant/50 rounded-xl p-4 text-center w-36 shadow-lg hover:border-outline-variant transition-all duration-300 group cursor-default">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center group-hover:border-primary/30 transition-colors">
+                        <span class="material-symbols-outlined text-outline text-[22px] group-hover:text-primary transition-colors">database</span>
+                    </div>
+                    <div class="font-label-caps text-label-caps text-on-surface-variant uppercase">Raw Data</div>
+                </div>
+
+                <!-- Connection Line 1 -->
+                <div class="flex-1 h-[2px] bg-gradient-to-r from-outline-variant/40 via-secondary/60 to-secondary relative mx-2 flow-line-animated">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-outline-variant/60"></div>
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary"></div>
+                </div>
+
+                <!-- Node 2: AI Facade (Center, Active) -->
+                <div class="bg-surface border-2 border-secondary rounded-xl p-5 text-center w-48 shadow-xl node-active-pulse relative cursor-default">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-secondary-container/20 to-tertiary-container/10 rounded-xl blur opacity-30"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-secondary-container/20 border border-secondary/30 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-secondary text-[28px]">psychology</span>
+                        </div>
+                        <div class="font-headline-md text-body-md font-bold text-on-surface mb-1">AI Facade</div>
+                        <div class="flex items-center justify-center gap-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></div>
+                            <span class="font-code-md text-code-md text-secondary">Processing...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Line 2 -->
+                <div class="flex-1 h-[2px] bg-gradient-to-r from-secondary via-tertiary/60 to-outline-variant/40 relative mx-2 flow-line-animated flow-line-animated-2">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary"></div>
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-outline-variant/60"></div>
+                </div>
+
+                <!-- Node 3: Struct JSON -->
+                <div class="bg-surface-container border border-outline-variant/50 rounded-xl p-4 text-center w-36 shadow-lg hover:border-outline-variant transition-all duration-300 group cursor-default">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center group-hover:border-tertiary/30 transition-colors">
+                        <span class="material-symbols-outlined text-tertiary text-[22px] group-hover:text-tertiary-fixed transition-colors">data_object</span>
+                    </div>
+                    <div class="font-label-caps text-label-caps text-on-surface-variant uppercase">Struct JSON</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Executions Table -->
+    <div class="glass-card overflow-hidden">
+        <!-- Header -->
+        <div class="px-md py-sm border-b border-outline-variant/20 bg-surface-container/20 flex justify-between items-center">
+            <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
+                <span class="material-symbols-outlined text-[20px] text-primary">history</span>
+                Recent Executions
+            </h3>
+            <button class="text-primary text-code-md font-code-md hover:text-primary-fixed transition-colors flex items-center gap-xs group">
+                View All
+                <span class="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+            </button>
+        </div>
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-outline-variant/20 bg-surface-container/30">
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">Status</th>
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">ID</th>
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">Model</th>
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">Latency</th>
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">Tokens</th>
+                        <th class="px-md py-sm font-label-caps text-label-caps text-on-surface-variant uppercase">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="font-body-md text-body-md">
+                    <!-- Row 1: Success -->
+                    <tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors cursor-default">
+                        <td class="px-md py-sm">
+                            <span class="flex items-center gap-xs text-tertiary">
+                                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="font-code-md text-code-md">200 OK</span>
+                            </span>
+                        </td>
+                        <td class="px-md py-sm font-code-md text-code-md text-on-surface-variant">req_8f92a1</td>
+                        <td class="px-md py-sm text-on-surface">gpt-4-turbo</td>
+                        <td class="px-md py-sm text-on-surface font-code-md text-code-md">1.2s</td>
+                        <td class="px-md py-sm text-on-surface font-code-md text-code-md">450</td>
+                        <td class="px-md py-sm text-on-surface-variant text-[13px]">Just now</td>
+                    </tr>
+                    <!-- Row 2: Success -->
+                    <tr class="border-b border-outline-variant/10 hover:bg-surface-container-low/50 transition-colors cursor-default">
+                        <td class="px-md py-sm">
+                            <span class="flex items-center gap-xs text-tertiary">
+                                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="font-code-md text-code-md">200 OK</span>
+                            </span>
+                        </td>
+                        <td class="px-md py-sm font-code-md text-code-md text-on-surface-variant">req_3b4c99</td>
+                        <td class="px-md py-sm text-on-surface">gpt-4-turbo</td>
+                        <td class="px-md py-sm text-on-surface font-code-md text-code-md">0.9s</td>
+                        <td class="px-md py-sm text-on-surface font-code-md text-code-md">320</td>
+                        <td class="px-md py-sm text-on-surface-variant text-[13px]">2m ago</td>
+                    </tr>
+                    <!-- Row 3: Rate Limited -->
+                    <tr class="hover:bg-surface-container-low/50 transition-colors cursor-default">
+                        <td class="px-md py-sm">
+                            <span class="flex items-center gap-xs text-error">
+                                <span class="material-symbols-outlined text-[16px]">warning</span>
+                                <span class="font-code-md text-code-md">429 Limit</span>
+                            </span>
+                        </td>
+                        <td class="px-md py-sm font-code-md text-code-md text-on-surface-variant">req_1a7d55</td>
+                        <td class="px-md py-sm text-on-surface">gpt-4-turbo</td>
+                        <td class="px-md py-sm text-on-surface font-code-md text-code-md">0.1s</td>
+                        <td class="px-md py-sm text-on-surface-variant font-code-md text-code-md">-</td>
+                        <td class="px-md py-sm text-on-surface-variant text-[13px]">15m ago</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface-container-lowest/90 backdrop-blur-md font-code-md text-code-md fixed bottom-0 right-0 w-[calc(100%-240px)] border-t border-outline-variant/30 flex justify-between items-center px-gutter py-xs h-10 z-40 cursor-default">
+    <div class="font-label-caps text-label-caps text-on-surface">
+        Pravaah Framework © 2024
+    </div>
+    <div class="flex gap-md">
+        <span class="text-on-surface-variant hover:text-tertiary-fixed transition-colors">Active Plugins: 12</span>
+        <span class="text-on-surface-variant hover:text-tertiary-fixed transition-colors">Throughput: 1.2k req/s</span>
+        <span class="text-secondary hover:text-secondary-fixed transition-colors font-semibold">AI Tokens: 4.5k</span>
+    </div>
+</footer>
+
+<script>
+    // === Interactive Slider Logic ===
+
+    // Temperature slider
+    function updateTemp(val) {
+        const temp = (val / 100).toFixed(1);
+        document.getElementById('tempValue').textContent = temp;
+        updateSliderTrack('tempSlider', val, 100);
+    }
+
+    // Max Tokens slider
+    function updateTokens(val) {
+        document.getElementById('tokensValue').textContent = val;
+        updateSliderTrack('tokensSlider', val, 4096);
+    }
+
+    // Visual track fill using gradient
+    function updateSliderTrack(sliderId, value, max) {
+        const slider = document.getElementById(sliderId);
+        const percent = (value / max) * 100;
+        slider.style.background = `linear-gradient(to right, #6f00be 0%, #ddb7ff ${percent}%, #1c1f2a ${percent}%, #1c1f2a 100%)`;
+    }
+
+    // Initialize slider tracks on load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateSliderTrack('tempSlider', 20, 100);
+        updateSliderTrack('tokensSlider', 1024, 4096);
+    });
+
+    // === Provider Toggle ===
+    function setProvider(provider) {
+        const openai = document.getElementById('providerOpenAI');
+        const anthropic = document.getElementById('providerAnthropic');
+        const modelSelect = document.getElementById('modelSelect');
+
+        if (provider === 'openai') {
+            openai.className = 'py-2 rounded-md provider-active text-on-secondary-container font-body-md text-body-md text-center transition-all duration-200 font-semibold';
+            anthropic.className = 'py-2 rounded-md bg-transparent text-on-surface-variant hover:text-on-surface font-body-md text-body-md text-center transition-all duration-200 border border-transparent hover:border-outline-variant/30';
+            modelSelect.innerHTML = `
+                <option>gpt-4-turbo-preview</option>
+                <option>gpt-4</option>
+                <option>gpt-3.5-turbo</option>
+            `;
+        } else {
+            anthropic.className = 'py-2 rounded-md provider-active text-on-secondary-container font-body-md text-body-md text-center transition-all duration-200 font-semibold';
+            openai.className = 'py-2 rounded-md bg-transparent text-on-surface-variant hover:text-on-surface font-body-md text-body-md text-center transition-all duration-200 border border-transparent hover:border-outline-variant/30';
+            modelSelect.innerHTML = `
+                <option>claude-3-opus</option>
+                <option>claude-3-sonnet</option>
+                <option>claude-3-haiku</option>
+            `;
+        }
+    }
+
+    // === Copy Code Button ===
+    function copyCode() {
+        const codeBlock = document.getElementById('codeBlock');
+        const text = codeBlock.textContent || codeBlock.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.classList.add('show-tooltip');
+            // Change icon temporarily
+            btn.querySelector('.material-symbols-outlined').textContent = 'check';
+            btn.querySelector('.material-symbols-outlined').classList.add('text-tertiary');
+
+            setTimeout(() => {
+                btn.classList.remove('show-tooltip');
+                btn.querySelector('.material-symbols-outlined').textContent = 'content_copy';
+                btn.querySelector('.material-symbols-outlined').classList.remove('text-tertiary');
+            }, 1500);
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah - Flow-driven AI-native backend framework</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#002e6a",
+                        "surface-container": "#1c1f2a",
+                        "surface-container-high": "#262a35",
+                        "tertiary-container": "#009eb9",
+                        "primary-container": "#4d8eff",
+                        "tertiary-fixed": "#acedff",
+                        "primary": "#adc6ff",
+                        "inverse-on-surface": "#2c303b",
+                        "surface-tint": "#adc6ff",
+                        "on-tertiary-container": "#002f38",
+                        "inverse-primary": "#005ac2",
+                        "on-error": "#690005",
+                        "surface-bright": "#353944",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-tertiary-fixed-variant": "#004e5c",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-variant": "#313540",
+                        "on-tertiary-fixed": "#001f26",
+                        "secondary-fixed": "#f0dbff",
+                        "surface-container-low": "#171b26",
+                        "surface-container-lowest": "#0a0e18",
+                        "outline-variant": "#424754",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface": "#0f131d",
+                        "tertiary": "#4cd7f6",
+                        "on-background": "#dfe2f1",
+                        "primary-fixed": "#d8e2ff",
+                        "outline": "#8c909f",
+                        "on-tertiary": "#003640",
+                        "on-primary-container": "#00285d",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#dfe2f1",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-secondary-container": "#d6a9ff",
+                        "surface-container-highest": "#313540",
+                        "surface-dim": "#0f131d",
+                        "tertiary-fixed-dim": "#4cd7f6",
+                        "secondary": "#ddb7ff",
+                        "error-container": "#93000a",
+                        "secondary-container": "#6f00be",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-secondary": "#490080",
+                        "background": "#0f131d",
+                        "inverse-surface": "#dfe2f1",
+                        "on-primary-fixed": "#001a42"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "xl": "64px",
+                        "md": "24px",
+                        "lg": "40px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin_mobile": "16px",
+                        "margin_desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                        "code-md": ["JetBrains Mono"],
+                        "display": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #0B0F19; color: #dfe2f1; font-family: 'Geist', sans-serif; }
+        .glass-panel { background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-panel-hover:hover { background: rgba(38, 42, 53, 0.8); border: 1px solid rgba(173, 198, 255, 0.2); box-shadow: 0 0 20px rgba(77, 142, 255, 0.1); }
+        .glow-text { text-shadow: 0 0 10px rgba(173, 198, 255, 0.5); }
+        .grid-bg { background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 24px 24px; }
+        
+        /* Animated Flow Lines Background */
+        .flow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none; }
+        .flow-line { position: absolute; background: linear-gradient(90deg, transparent, rgba(77, 142, 255, 0.8), transparent); height: 1px; width: 200px; opacity: 0; animation: flowAnim linear infinite; }
+        @keyframes flowAnim {
+            0% { transform: translateX(-100%) scaleX(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100vw) scaleX(1.5); opacity: 0; }
+        }
+        
+        /* Pulse Animation */
+        .pulse-ring { animation: pulseAnim 2s infinite; }
+        @keyframes pulseAnim {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 215, 246, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(76, 215, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 215, 246, 0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Ambient Flow Background -->
+<div class="flow-container" id="flowBg"></div>
+<script>
+        const flowContainer = document.getElementById('flowBg');
+        for (let i = 0; i < 20; i++) {
+            const line = document.createElement('div');
+            line.className = 'flow-line';
+            line.style.top = `${Math.random() * 100}%`;
+            line.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            line.style.animationDelay = `${Math.random() * 5}s`;
+            flowContainer.appendChild(line);
+        }
+    </script>
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-margin_desktop h-16">
+<div class="flex items-center gap-md">
+<span class="font-display text-headline-md font-bold text-primary tracking-tight">Pravaah</span>
+<div class="hidden md:flex gap-gutter ml-lg">
+<a class="font-body-md text-body-md text-primary font-bold hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Dev Environment</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Project Context</a>
+</div>
+</div>
+<div class="flex items-center gap-gutter">
+<button class="font-label-caps text-label-caps text-tertiary glass-panel px-sm py-xs rounded flex items-center gap-xs hover:bg-surface-container-high transition-colors">
+<span class="pulse-ring w-2 h-2 rounded-full bg-tertiary inline-block"></span>
+                System Health
+            </button>
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant opacity-80 hover:opacity-100 cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-80 hover:opacity-100 cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 px-margin_mobile md:px-margin_desktop pb-24 z-10">
+<!-- Hero Section -->
+<section class="max-w-5xl mx-auto mt-xl mb-32 text-center flex flex-col items-center justify-center min-h-[614px] relative">
+<div class="absolute inset-0 grid-bg opacity-30 z-[-1] mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);"></div>
+<h1 class="font-display text-display text-on-surface mb-sm glow-text">Pravaah</h1>
+<p class="font-headline-lg text-headline-lg text-on-surface-variant mb-lg max-w-3xl">Flow-driven AI-native backend framework.</p>
+<div class="flex flex-wrap justify-center gap-gutter">
+<button class="bg-primary-container text-on-primary-container font-headline-md text-body-lg px-md py-sm rounded-lg hover:bg-primary transition-colors shadow-[0_0_15px_rgba(77,142,255,0.4)]">
+                    Launch Demo
+                </button>
+<button class="glass-panel text-on-surface font-headline-md text-body-lg px-md py-sm rounded-lg hover:bg-surface-container-high transition-colors flex items-center gap-sm">
+                    View Architecture
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="glass-panel text-on-surface font-headline-md text-body-lg px-md py-sm rounded-lg hover:bg-surface-container-high transition-colors">
+                    Explore Plugins
+                </button>
+</div>
+</section>
+<!-- Features Overview (Bento Grid) -->
+<section class="max-w-6xl mx-auto mb-32">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter auto-rows-[250px]">
+<!-- Modular Card -->
+<div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-primary-container relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary-container/10 rounded-full blur-3xl group-hover:bg-primary-container/20 transition-all"></div>
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-sm block">extension</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Modular by Design</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Hot-swappable components that scale independently. Build complex systems with atomic precision.</p>
+</div>
+<div class="font-code-md text-code-md text-primary mt-sm flex items-center gap-xs">
+<span class="text-tertiary">import</span> { Module } <span class="text-tertiary">from</span> '@pravaah/core'
+                    </div>
+</div>
+<!-- Event-Driven Card -->
+<div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-tertiary md:col-span-2 relative overflow-hidden">
+<div class="absolute inset-0 grid-bg opacity-20"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-tertiary text-3xl mb-sm block">bolt</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Event-Driven Core</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">Asynchronous, non-blocking architecture ensuring sub-millisecond latency for high-throughput environments.</p>
+</div>
+<div class="relative z-10 flex gap-sm mt-auto">
+<div class="bg-surface-container/80 rounded px-sm py-xs font-code-md text-code-md text-on-surface border border-outline-variant/30 flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Stream A active
+                         </div>
+<div class="bg-surface-container/80 rounded px-sm py-xs font-code-md text-code-md text-on-surface border border-outline-variant/30 flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Stream B active
+                         </div>
+</div>
+</div>
+<!-- AI-Native Card -->
+<div class="glass-panel glass-panel-hover rounded-xl p-md flex flex-col justify-between border-t-2 border-t-secondary-container md:col-span-3 relative overflow-hidden">
+<div class="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-secondary-container/10 to-transparent pointer-events-none"></div>
+<div class="flex flex-col md:flex-row gap-lg items-center relative z-10 h-full">
+<div class="flex-1">
+<span class="material-symbols-outlined text-secondary text-3xl mb-sm block">psychology</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">AI-Native Processing</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Deep integration with LLMs and embedding models. Built-in vector search and inference pipelines routed seamlessly through the core event bus.</p>
+</div>
+<div class="flex-1 w-full bg-surface-container-lowest/80 rounded border border-outline-variant/50 p-sm font-code-md text-code-md text-on-surface-variant shadow-inner">
+<pre><code><span class="text-secondary">const</span> pipeline = <span class="text-tertiary">new</span> AIPipeline({
+  model: <span class="text-primary">'gpt-4-turbo'</span>,
+  temperature: <span class="text-secondary">0.2</span>,
+  stream: <span class="text-tertiary">true</span>
+});
+
+pipeline.on(<span class="text-primary">'data'</span>, chunk =&gt; {
+  <span class="text-tertiary">await</span> processFlow(chunk);
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="fixed bottom-0 right-0 w-full bg-surface-container-lowest/90 backdrop-blur-md border-t border-outline-variant/30 flex justify-between items-center px-gutter py-xs h-10 z-50">
+<span class="font-label-caps text-label-caps text-on-surface">Pravaah Framework © 2024</span>
+<div class="flex gap-md font-code-md text-code-md text-on-surface-variant">
+<span class="hover:text-tertiary-fixed cursor-default">Active Plugins: 12</span>
+<span class="hover:text-tertiary-fixed cursor-default">Throughput: 1.2k req/s</span>
+<span class="hover:text-tertiary-fixed cursor-default">AI Tokens: 4.5k</span>
+</div>
+</footer>
+</body></html>

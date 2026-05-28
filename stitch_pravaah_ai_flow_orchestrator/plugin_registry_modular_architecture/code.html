@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pravaah - Plugin Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#002e6a",
+                        "surface-container": "#1c1f2a",
+                        "surface-container-high": "#262a35",
+                        "tertiary-container": "#009eb9",
+                        "primary-container": "#4d8eff",
+                        "tertiary-fixed": "#acedff",
+                        "primary": "#adc6ff",
+                        "inverse-on-surface": "#2c303b",
+                        "surface-tint": "#adc6ff",
+                        "on-tertiary-container": "#002f38",
+                        "inverse-primary": "#005ac2",
+                        "on-error": "#690005",
+                        "surface-bright": "#353944",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-tertiary-fixed-variant": "#004e5c",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-variant": "#313540",
+                        "on-tertiary-fixed": "#001f26",
+                        "secondary-fixed": "#f0dbff",
+                        "surface-container-low": "#171b26",
+                        "surface-container-lowest": "#0a0e18",
+                        "outline-variant": "#424754",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface": "#0f131d",
+                        "tertiary": "#4cd7f6",
+                        "on-background": "#dfe2f1",
+                        "primary-fixed": "#d8e2ff",
+                        "outline": "#8c909f",
+                        "on-tertiary": "#003640",
+                        "on-primary-container": "#00285d",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#dfe2f1",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-secondary-container": "#d6a9ff",
+                        "surface-container-highest": "#313540",
+                        "surface-dim": "#0f131d",
+                        "tertiary-fixed-dim": "#4cd7f6",
+                        "secondary": "#ddb7ff",
+                        "error-container": "#93000a",
+                        "secondary-container": "#6f00be",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-secondary": "#490080",
+                        "background": "#0f131d",
+                        "inverse-surface": "#dfe2f1",
+                        "on-primary-fixed": "#001a42"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "xl": "64px",
+                        "md": "24px",
+                        "lg": "40px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin_mobile": "16px",
+                        "margin_desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                        "code-md": ["JetBrains Mono"],
+                        "display": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(28, 31, 42, 0.4) 0%, rgba(10, 14, 24, 0.8) 100%);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(140, 144, 159, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glow-active { box-shadow: 0 0 15px rgba(77, 142, 255, 0.2); }
+        .grid-bg {
+            background-image: radial-gradient(rgba(140, 144, 159, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .pulse-core { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .plugin-link-line {
+            position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+            background: linear-gradient(to right, rgba(77,142,255,0.5), transparent); height: 1px;
+        }
+        .card-hover:hover .plugin-link-line { opacity: 1; }
+    </style>
+</head>
+<body class="min-h-screen flex antialiased grid-bg font-body-md text-body-md">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-surface/80 backdrop-blur-md fixed left-0 top-0 h-full w-60 border-r border-outline-variant/30 shadow-xl flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display text-headline-md font-bold text-primary">Pravaah</h1>
+<p class="font-code-md text-code-md text-outline">AI-Native Backend</p>
+</div>
+<button class="mx-4 mb-6 bg-primary text-on-primary font-headline-md text-body-md py-2 rounded-lg hover:bg-primary-fixed transition-colors duration-200">
+            New Workflow
+        </button>
+<div class="flex-1 flex flex-col gap-1 px-2">
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 py-2 text-primary font-bold border-l-2 border-primary pl-4 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">extension</span>
+                Plugins
+            </a>
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bolt</span>
+                Events
+            </a>
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">psychology</span>
+                AI Workflows
+            </a>
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">api</span>
+                APIs
+            </a>
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">terminal</span>
+                Logs
+            </a>
+</div>
+<div class="px-2 mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 py-2 px-4 rounded-md text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-60 flex flex-col min-h-screen relative">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md docked full-width top-0 border-b border-outline-variant/30 flat no shadows flex justify-between items-center w-full px-margin_desktop h-16 z-40 sticky">
+<div class="flex items-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Dev Environment</a>
+<a class="text-primary font-bold hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Project Context</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-tertiary text-code-md font-code-md border border-tertiary/30 px-3 py-1 rounded-md hover:bg-tertiary/10 transition-colors">
+                    System Health
+                </button>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="p-margin_desktop flex-1 pb-24 relative overflow-hidden">
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Plugin Management</h2>
+<p class="text-outline font-body-md text-body-md">Manage active modules and system integrations.</p>
+</div>
+<div class="flex gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container border border-outline-variant/50 rounded-md pl-9 pr-3 py-1.5 text-on-surface font-code-md text-code-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none w-64 placeholder:text-outline/50" placeholder="Search registry..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Plugin Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 relative">
+<!-- Card: CRM Core -->
+<div class="glass-card rounded-xl p-6 border-t-2 border-t-primary glow-active card-hover relative group">
+<div class="plugin-link-line w-full top-1/2 left-full -z-10 hidden xl:block"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">database</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">CRM Core</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+<span class="font-code-md text-label-caps text-tertiary uppercase">Active</span>
+</div>
+</div>
+</div>
+<span class="font-code-md text-label-caps text-outline bg-surface-container-high px-2 py-1 rounded">v2.4.1</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant mb-6 min-h-[44px]">
+                        Core customer relationship management data models and routing layer.
+                    </div>
+<div class="grid grid-cols-2 gap-4 mb-6 p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/20">
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Models</div>
+<div class="font-code-md text-code-md text-on-surface">2 registered</div>
+</div>
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Routes</div>
+<div class="font-code-md text-code-md text-on-surface">5 active</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/db</span>
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/events</span>
+</div>
+<button class="w-full py-2 border border-outline-variant/50 rounded-lg text-on-surface font-body-md text-body-md hover:bg-surface-container-high hover:border-primary/50 transition-all text-center">
+                        View Registry
+                    </button>
+</div>
+<!-- Card: AI Orchestrator -->
+<div class="glass-card rounded-xl p-6 border-t-2 border-t-secondary card-hover relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">AI Orchestrator</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+<span class="font-code-md text-label-caps text-tertiary uppercase">Active</span>
+</div>
+</div>
+</div>
+<span class="font-code-md text-label-caps text-outline bg-surface-container-high px-2 py-1 rounded">v1.0.5</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant mb-6 min-h-[44px]">
+                        Handles prompt templates, LLM routing, and context window management.
+                    </div>
+<div class="grid grid-cols-2 gap-4 mb-6 p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/20">
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Templates</div>
+<div class="font-code-md text-code-md text-on-surface">14 loaded</div>
+</div>
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Tokens/min</div>
+<div class="font-code-md text-code-md text-secondary">~4.5k</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/llm</span>
+</div>
+<button class="w-full py-2 border border-outline-variant/50 rounded-lg text-on-surface font-body-md text-body-md hover:bg-surface-container-high hover:border-secondary/50 transition-all text-center">
+                        View Registry
+                    </button>
+</div>
+<!-- Card: Audit Logger -->
+<div class="glass-card rounded-xl p-6 border-t-2 border-t-tertiary card-hover relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Audit Logger</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+<span class="font-code-md text-label-caps text-tertiary uppercase">Active</span>
+</div>
+</div>
+</div>
+<span class="font-code-md text-label-caps text-outline bg-surface-container-high px-2 py-1 rounded">v3.1.0</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant mb-6 min-h-[44px]">
+                        Event-driven system audit trail and compliance logging service.
+                    </div>
+<div class="grid grid-cols-2 gap-4 mb-6 p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/20">
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Mode</div>
+<div class="font-code-md text-code-md text-on-surface">Event-Driven</div>
+</div>
+<div>
+<div class="text-outline font-label-caps text-label-caps uppercase mb-1">Storage</div>
+<div class="font-code-md text-code-md text-on-surface">Cold/Warm</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/events</span>
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/storage</span>
+</div>
+<button class="w-full py-2 border border-outline-variant/50 rounded-lg text-on-surface font-body-md text-body-md hover:bg-surface-container-high hover:border-tertiary/50 transition-all text-center">
+                        View Registry
+                    </button>
+</div>
+<!-- Card: Auth Stub -->
+<div class="glass-card rounded-xl p-6 border-t-2 border-t-error border border-error/20 card-hover relative group bg-error/5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Auth Stub</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="relative flex h-2 w-2">
+<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+</span>
+<span class="font-code-md text-label-caps text-error uppercase">Warning</span>
+</div>
+</div>
+</div>
+<span class="font-code-md text-label-caps text-outline bg-surface-container-high px-2 py-1 rounded">v0.9.beta</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant mb-6 min-h-[44px]">
+                        Authentication middleware stub. Requires provider configuration.
+                    </div>
+<div class="grid grid-cols-1 gap-4 mb-6 p-3 bg-error-container/10 rounded-lg border border-error/20">
+<div>
+<div class="text-error font-label-caps text-label-caps uppercase mb-1">Configuration Needed</div>
+<div class="font-code-md text-code-md text-on-surface opacity-80">Missing OAuth2 client credentials in environment variables.</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-1 bg-surface-container text-outline font-code-md text-label-caps border border-outline-variant/30 rounded">deps: @pravaah/core</span>
+</div>
+<button class="w-full py-2 border border-error/50 rounded-lg text-error font-body-md text-body-md hover:bg-error/10 transition-all text-center">
+                        Configure Provider
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest/90 backdrop-blur-md fixed bottom-0 right-0 w-[calc(100%-240px)] border-t border-outline-variant/30 flat no shadows flex justify-between items-center px-gutter py-xs h-10 z-30">
+<div class="font-label-caps text-label-caps text-on-surface">
+                Pravaah Framework © 2024
+            </div>
+<div class="flex gap-6 font-code-md text-code-md">
+<span class="text-on-surface-variant hover:text-tertiary-fixed cursor-default">Active Plugins: 12</span>
+<span class="text-on-surface-variant hover:text-tertiary-fixed cursor-default">Throughput: 1.2k req/s</span>
+<span class="text-on-surface-variant hover:text-tertiary-fixed cursor-default">AI Tokens: 4.5k</span>
+</div>
+</footer>
+</main>
+</body></html>
